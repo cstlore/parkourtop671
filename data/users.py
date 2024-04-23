@@ -1,5 +1,5 @@
 import datetime
-import hashlib
+import bcrypt
 
 import sqlalchemy
 from flask_login import UserMixin
@@ -21,4 +21,6 @@ class User(SqlAlchemyBase, UserMixin):
                                      default=datetime.datetime.now)
 
     def check_password(self, password):
-        return password == self.hashed_password
+        bytes = password.encode('utf-8')
+        hashed = bcrypt.hashpw(bytes, self.hashed_password)
+        return hashed == self.hashed_password

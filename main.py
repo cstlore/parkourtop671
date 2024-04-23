@@ -7,6 +7,7 @@ from wtforms.fields.simple import EmailField
 from wtforms.validators import DataRequired
 from data import db_session
 from data.users import User
+import bcrypt
 from flask import session
 
 app = Flask(__name__)
@@ -18,12 +19,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
+#
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
 
 
+# s
 class LoginForm(FlaskForm):
     email = EmailField('Почта', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
@@ -37,44 +40,53 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Зарегистрироваться')
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
+@app.route('/auth', methods=['GET', 'POST'])
+def auth():
+    # login_form
+    login_form = LoginForm()
+    register_form = RegisterForm()
+    if login_form.validate_on_submit():
         db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.email == form.email.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember_me.data)
-            return redirect("/")
-        return render_template('login.html',
-                               message="Неправильный логин или пароль",
-                               form=form)
-    return render_template('login.html', title='Авторизация', form=form)
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
+        user = db_sess.query(User).filter(User.email == login_form.email.data).first()
+        if user and user.check_password(login_form.password.data):
+            login_user(user, remember=login_form.remember_me.data)
+        if user.check_password(login_form.password.data) is False:
+            return render_template('login.html',
+                                   login_message="Неправильный логин или пароль",
+                                   login_form=login_form, register_form=register_form)
+    # register_form
+    if register_form.validate_on_submit():
         db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        user = db_sess.query(User).filter(User.email == register_form.email.data).first()
         if user:
-            return render_template('register.html',
-                                   message="Такой пользователь уже существует",
-                                   form=form)
+            return render_template('login.html',
+                                   register_message="Такой пользователь уже существует",
+                                   login_form=login_form, register_form=register_form)
         new_user = User()
-        new_user.email = form.email.data
-        new_user.hashed_password = form.password.data
+        new_user.email = register_form.email.data
+        password = register_form.password.data
+        bytes = password.encode('utf-8')
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(bytes, salt)
+        new_user.hashed_password = hashed
         db_sess.add(new_user)
         db_sess.commit()
-        return redirect('/login')
-    return render_template('register.html', title='Авторизация', form=form)
+    return render_template('login.html', title='Авторизация', login_form=login_form, register_form=register_form)
 
+
+#
 
 @app.route('/')
 def render():
     return render_template('base.html')
 
 
-if __name__ == '__main__':
+#
+
+def main():
+    db_session.global_init('db/users.sqlite')
     app.run(port=8080, host='127.0.0.1')
+
+
+if __name__ == '__main__':
+    main()
