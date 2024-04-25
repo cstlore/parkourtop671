@@ -1,6 +1,6 @@
 import datetime
 from flask import Flask, render_template, redirect
-from flask_login import LoginManager, login_manager, login_user
+from flask_login import LoginManager, login_manager, login_user, current_user, login_required, logout_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.fields.simple import EmailField
@@ -9,8 +9,8 @@ from data import db_session
 from data.users import User
 import bcrypt
 from flask import session
-
-app = Flask(__name__)
+###
+app = Flask(__name__, static_folder="static")
 app.secret_key = b'_53oi3uriq9pifpff;apl'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
     days=365
@@ -38,6 +38,7 @@ class RegisterForm(FlaskForm):
     email_ = EmailField('Почта', validators=[DataRequired()])
     password_ = PasswordField('Пароль', validators=[DataRequired()])
     submit_ = SubmitField('Зарегистрироваться')
+
 
 #
 @app.route('/auth', methods=['GET', 'POST'])
@@ -77,13 +78,22 @@ def auth():
     return render_template('login.html', title='Авторизация', login_form=login_form, register_form=register_form)
 
 
-#
-
+###
 @app.route('/')
 def render():
-    return render_template('base.html')
+    if current_user.is_authenticated is False:
+        return redirect('/auth')
+    return render_template('page.html')
 
-######
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
+
+
+#################
 
 def main():
     db_session.global_init('db/users.sqlite')
