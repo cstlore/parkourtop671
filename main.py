@@ -35,36 +35,39 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
-    email = EmailField('Почта', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    submit = SubmitField('Зарегистрироваться')
+    email_ = EmailField('Почта', validators=[DataRequired()])
+    password_ = PasswordField('Пароль', validators=[DataRequired()])
+    submit_ = SubmitField('Зарегистрироваться')
 
-
+#
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
     # login_form
     login_form = LoginForm()
     register_form = RegisterForm()
-    if login_form.validate_on_submit():
+    if login_form.submit.data and login_form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == login_form.email.data).first()
         if user and user.check_password(login_form.password.data):
             login_user(user, remember=login_form.remember_me.data)
-        if user.check_password(login_form.password.data) is False:
+            return redirect('/')
+        if user and user.check_password(login_form.password.data) is False:
             return render_template('login.html',
                                    login_message="Неправильный логин или пароль",
+                                   register_message='',
                                    login_form=login_form, register_form=register_form)
     # register_form
-    if register_form.validate_on_submit():
+    if register_form.submit_.data and register_form.validate_on_submit():
         db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.email == register_form.email.data).first()
+        user = db_sess.query(User).filter(User.email == register_form.email_.data).first()
         if user:
             return render_template('login.html',
+                                   login_message='',
                                    register_message="Такой пользователь уже существует",
                                    login_form=login_form, register_form=register_form)
         new_user = User()
-        new_user.email = register_form.email.data
-        password = register_form.password.data
+        new_user.email = register_form.email_.data
+        password = register_form.password_.data
         bytes = password.encode('utf-8')
         salt = bcrypt.gensalt()
         hashed = bcrypt.hashpw(bytes, salt)
@@ -80,8 +83,7 @@ def auth():
 def render():
     return render_template('base.html')
 
-
-#
+######
 
 def main():
     db_session.global_init('db/users.sqlite')
