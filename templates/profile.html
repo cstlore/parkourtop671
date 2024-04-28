@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="width: 100vw; height: 100vh; background-color: #2e3440;">
+    <h1 style="width:100%; text-align: center; padding-top: 100px;" class="text-light">Добавление анкеты</h1>
+    <form action="" method="post" style="width: 60%; margin-left: auto; margin-right: auto; margin-top:50px;">
+        <input class="form-control" placeholder="Напишите о себе"/>
+        <div class="file-upload">
+            <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Добавить
+                изображение
+            </button>
+
+            <div class="image-upload-wrap">
+                <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*"/>
+                <div class="drag-text">
+                    <h3>Перетащи файл или выбери изображение</h3>
+                </div>
+            </div>
+            <div class="file-upload-content">
+                <img class="file-upload-image" src="#" alt="your image"/>
+                <div class="image-title-wrap">
+                    <button type="button" onclick="removeUpload()" class="remove-image">Удалить</button>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Создать
+            анкету
+        </button>
+    </form>
+</div>
+{% endblock %}

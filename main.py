@@ -9,6 +9,7 @@ from data import db_session
 from data.users import User
 import bcrypt
 from flask import session
+
 ###
 app = Flask(__name__, static_folder="static")
 app.secret_key = b'_53oi3uriq9pifpff;apl'
@@ -77,8 +78,21 @@ def auth():
         db_sess.commit()
     return render_template('login.html', title='Авторизация', login_form=login_form, register_form=register_form)
 
+#####
+@app.route('/add_profile')
+def add_profile():
+    if current_user.is_authenticated is False:
+        return redirect('/auth')
+    return render_template('profile.html')
 
-###
+################################№№########
+def render():
+    if current_user.is_authenticated is False:
+        return redirect('/auth')
+    return render_template('page.html')
+
+
+######
 @app.route('/')
 def render():
     if current_user.is_authenticated is False:
@@ -86,6 +100,7 @@ def render():
     return render_template('page.html')
 
 
+####
 @app.route('/logout')
 @login_required
 def logout():
@@ -93,12 +108,14 @@ def logout():
     return redirect("/")
 
 
+#
+
 #################
 
 def main():
     db_session.global_init('db/users.sqlite')
     app.run(port=8080, host='127.0.0.1')
 
-
+#
 if __name__ == '__main__':
     main()
