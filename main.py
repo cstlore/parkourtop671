@@ -1,7 +1,7 @@
 import datetime
 import os
 
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, jsonify
 from flask_login import LoginManager, login_manager, login_user, current_user, login_required, logout_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
@@ -11,6 +11,8 @@ from data import db_session
 from data.users import User
 from data.posts import Post
 import bcrypt
+import smtplib
+from email.mime.text import MIMEText
 from flask import session
 
 UPLOAD_FOLDER = './static/upload'
@@ -107,11 +109,17 @@ def add_profile():
     return render_template('profile.html')
 
 
-################################№№###############
-def render():
-    if current_user.is_authenticated is False:
-        return redirect('/auth')
-    return render_template('page.html')
+################################№№################
+#####
+@app.route('/contact/<email>', methods=['POST'])
+def contact(email):
+    text = MIMEText(f'Пользователю:{current_user.email} очень понравились вы, напишите ему прямо сейчас!!!', 'plain',
+                    'utf-8')
+    smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
+    smtpObj.starttls()
+    smtpObj.login('c93314903@gmail.com', 'rxiy lquq bdgn wkmc')
+    smtpObj.sendmail("c93314903@gmail.com", email, text.as_string())
+    return jsonify(result='ok')
 
 
 ############
@@ -127,6 +135,8 @@ def render():
     db_sess.close()
     print(files)
     return render_template('page.html', files=files)
+
+
 ##########
 
 ########

@@ -67,6 +67,10 @@
                         elm.style.marginLeft = `5%`
                     } else {
                         elm.parentNode.removeChild(elm);
+                        if (diffX >= 75) {
+                            $.post(`/contact/${elm.getElementsByTagName("*")[3].textContent}`, data => {
+                            });
+                        }
                     }
                 })
             }
