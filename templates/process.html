@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fishing</title>
+</head>
+<body>
+{% if k < 10 %}
+        <div class="container">
+    <form action="/process" method="post">
+        <input type="submit" value="Достать">
+    </form>
+    </div>
+ {% elif k == 10 %}
+       <div class="container">
+    <form action="/poimal" method="post">
+        <input type="submit" value="Достать">
+    </form>
+    </div>
+ {% endif %}
+<h2>
+    <img src="static/img/process.jpg"
+         alt="здесь должна была быть картинка, но не нашлась">
+</h2>
+</body>
+</html>
