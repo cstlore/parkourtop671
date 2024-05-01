@@ -3,13 +3,13 @@
 {% block content %}
 <div style="width: 100vw; height: 100vh; display: flex;">
     <div style="width: 70%; height: 100%; border-right: gray solid 2px; background-color: #2e3440;">
-        {% if k < 10 %}
+        {% if k < 1 %}
         <div class="container">
             <form action="/process" method="post">
                 <input type="submit" value="Достать">
             </form>
         </div>
-        {% elif k == 10 %}
+        {% elif k == 1 %}
         <div class="container">
             <form action="/game" method="post">
                 <input type="submit" value="Достать">
