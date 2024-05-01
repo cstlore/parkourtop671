@@ -3,6 +3,10 @@
     cursor: pointer;
 }
 
+#post{
+    cursor: none;
+}
+
 body {
     font-family: sans-serif;
 }
@@ -123,4 +127,95 @@ body {
 
 #post {
     transform-origin: bottom center;
+}
+
+body {
+    overflow: hidden;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.header {
+    width: 100%;
+    color: deepskyblue;
+    background-color: darkslategray;
+    box-sizing: border-box;
+}
+
+table p {
+    margin: 0px;
+}
+
+@keyframes blink {
+    from {
+        background-color: darkslategray;
+    }
+    50% {
+        background-color: CadetBlue;
+    }
+    to {
+        background-color: darkslategray;
+    }
+}
+
+.button {
+    border-radius: 3px;
+    padding: 0px 3px;
+}
+
+.button:hover {
+    animation-name: blink;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+}
+
+.gameField {
+    height: calc(100vh - 25px - 44px);
+    background-image: url('./img/sea_2.jpg');
+    background-size: cover;
+}
+
+.img {
+    position: absolute;
+    display: none;
+}
+
+.gameOver {
+    visibility: hidden;
+    position: fixed;
+    top: 25px;
+    left: 0px;
+    height: calc(100vh - 25px - 44px);
+    width: 100%;
+    color: darkslategray;
+    background-color: rgba(190, 190, 190, .5);
+    opacity: 0;
+}
+
+.gameOverAnimate {
+    visibility: visible;
+    opacity: 1;
+    transition-property: opacity;
+    transition-duration: 2s;
+}
+
+#gameOver div {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    height: calc(100vh - 25px - 44px);
+    margin: 0px;
+}
+
+#gameOver div h1 {
+    width: 100%;
+    margin: 0px;
+    font-size: 80px;
+    text-shadow: 3px 3px 3px black;
+}
+
+#gameOver div p {
+    width: 100%;
+    margin: 0px;
+    text-shadow: 1px 1px 1px black;
 }

@@ -1,5 +1,7 @@
 import datetime
 import os
+import time
+from random import randint
 
 from flask import Flask, render_template, redirect, request, jsonify
 from flask_login import LoginManager, login_manager, login_user, current_user, login_required, logout_user
@@ -122,6 +124,7 @@ def contact(email):
     return jsonify(result='ok')
 
 
+#
 ############
 @app.route('/')
 def render():
@@ -133,7 +136,6 @@ def render():
     for i in range(len(files)):
         files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
     db_sess.close()
-    print(files)
     return render_template('page.html', files=files)
 
 
@@ -149,8 +151,97 @@ def logout():
     return redirect("/")
 
 
-#######
+k = 0
 
+
+###
+
+
+@app.route('/kluet', methods=["GET", "POST"])
+def kluet():
+    if current_user.is_authenticated is False:
+        return redirect('/auth')
+    files = os.listdir('./static/upload')
+    files = list(files)
+    db_sess = db_session.create_session()
+    for i in range(len(files)):
+        files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
+    db_sess.close()
+    if request.method == "POST":
+        time.sleep(randint(1, 10))
+        return render_template("kluet.html", files=files)
+
+
+@app.route('/process', methods=["GET", "POST"])
+def process():
+    if current_user.is_authenticated is False:
+        return redirect('/auth')
+    files = os.listdir('./static/upload')
+    files = list(files)
+    db_sess = db_session.create_session()
+    for i in range(len(files)):
+        files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
+    db_sess.close()
+    global k
+    k += 1
+    return render_template("process.html", k=k, files=files)
+
+
+@app.route('/game', methods=["GET", "POST"])
+def game():
+    if current_user.is_authenticated is False:
+        return redirect('/auth')
+    files = os.listdir('./static/upload')
+    files = list(files)
+    db_sess = db_session.create_session()
+    for i in range(len(files)):
+        files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
+    db_sess.close()
+    return render_template("game.html", files=files)
+##########
+#############
+@app.route('/poimal', methods=["GET", "POST"])
+def poimal():
+    if current_user.is_authenticated is False:
+        return redirect('/auth')
+    files = os.listdir('./static/upload')
+    files = list(files)
+    db_sess = db_session.create_session()
+    for i in range(len(files)):
+        files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
+    db_sess.close()
+    return render_template("poimal.html", files=files)
+
+
+@app.route('/itog', methods=["GET", "POST"])
+def fish():
+    if current_user.is_authenticated is False:
+        return redirect('/auth')
+    files = os.listdir('./static/upload')
+    files = list(files)
+    db_sess = db_session.create_session()
+    for i in range(len(files)):
+        files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
+    db_sess.close()
+    k = randint(0, 9)
+    jpg = ['amur.jpg', 'forel.jpg', 'gorbusha.jpg', 'karas.jpg', 'karp.jpg', 'lesch.jpg', 'lin.jpg', 'okun.jpg',
+           'sudak.jpg', 'yaz.jpg']
+    return render_template("fish.html", picture=jpg[k], files=files)
+
+
+@app.route('/vozvrat', methods=["GET", "POST"])
+def vozvrat():
+    if current_user.is_authenticated is False:
+        return redirect('/auth')
+    files = os.listdir('./static/upload')
+    files = list(files)
+    db_sess = db_session.create_session()
+    for i in range(len(files)):
+        files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
+    db_sess.close()
+    return render_template("start.html", files=files)
+
+######
 ###############################################
 ###
 def main():
