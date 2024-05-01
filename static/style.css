@@ -120,3 +120,7 @@ body {
 * {
     overflow: hidden;
 }
+
+#post {
+    transform-origin: bottom center;
+}

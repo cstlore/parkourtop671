@@ -22,13 +22,13 @@
         function waitForElm(selector) {
             return new Promise(resolve => {
                 if (document.querySelectorAll(selector)[0]) {
-                    return resolve(document.querySelectorAll(selector)[0]);
+                    return resolve(document.querySelectorAll(selector));
                 }
 
                 const observer = new MutationObserver(mutations => {
                     if (document.querySelectorAll(selector)[0]) {
                         observer.disconnect();
-                        resolve(document.querySelectorAll(selector)[0]);
+                        resolve(document.querySelectorAll(selector));
                     }
                 });
 
@@ -40,16 +40,36 @@
             });
         }
 
-        waitForElm('#post').then((elm) => {
-            let posX = -1
-            elm.addEventListener("dragstart", (e) => {
-                posX = e.pageX
-            });
-            elm.addEventListener("drag", (e) => {
-                let diffX = Math.max(Math.min(200, e.pageX - posX), -200)
-                elm.style.transform = `rotate(${diffX / 400 * 90}deg)`
-
-            });
+        waitForElm('#post').then((elms) => {
+            for (let elm of elms) {
+                console.log(elm)
+                let posX = -1
+                let diffX
+                elm.addEventListener("dragstart", (e) => {
+                    posX = e.pageX
+                });
+                elm.addEventListener("drag", (e) => {
+                    if (e.pageX === 0) return;
+                    diffX = Math.max(Math.min(100, e.pageX - posX), -100)
+                    elm.style.transform = `rotate(${diffX / 400 * 90}deg)`
+                    elm.style.marginLeft = `calc(${diffX / 4}px + 5%)`
+                    if (diffX > 0) {
+                        elm.querySelector('#red').style.opacity = `0`
+                        elm.querySelector('#green').style.opacity = `${diffX / 2}%`
+                    } else {
+                        elm.querySelector('#green').style.opacity = `0`
+                        elm.querySelector('#red').style.opacity = `${(-diffX) / 2}%`
+                    }
+                });
+                elm.addEventListener("dragend", (e) => {
+                    if (diffX > -75 && diffX < 75) {
+                        elm.style.transform = `rotate(0deg)`
+                        elm.style.marginLeft = `5%`
+                    } else {
+                        elm.parentNode.removeChild(elm);
+                    }
+                })
+            }
         });
 
         function readURL(input) {

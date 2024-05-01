@@ -114,13 +114,20 @@ def render():
     return render_template('page.html')
 
 
-###########
+############
 @app.route('/')
 def render():
     if current_user.is_authenticated is False:
         return redirect('/auth')
-    return render_template('page.html', files=os.listdir('./static/upload'))
-
+    files = os.listdir('./static/upload')
+    files = list(files)
+    db_sess = db_session.create_session()
+    for i in range(len(files)):
+        files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
+    db_sess.close()
+    print(files)
+    return render_template('page.html', files=files)
+##########
 
 ########
 
@@ -134,12 +141,14 @@ def logout():
 
 #######
 
-#########################
+###############################################
 ###
 def main():
-    db_session.global_init('db/users.sqlite')#№№####
+    db_session.global_init('db/users.sqlite')  # №№####
     app.run(port=8080, host='127.0.0.1')
 
+
+################
 ####
 #
 if __name__ == '__main__':
