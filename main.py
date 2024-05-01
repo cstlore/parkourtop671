@@ -1,21 +1,21 @@
 import datetime
 import os
+import smtplib
 import time
+from email.mime.text import MIMEText
 from random import randint
 
+import bcrypt
 from flask import Flask, render_template, redirect, request, jsonify
-from flask_login import LoginManager, login_manager, login_user, current_user, login_required, logout_user
+from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import PasswordField, BooleanField, SubmitField
 from wtforms.fields.simple import EmailField
 from wtforms.validators import DataRequired
+
 from data import db_session
-from data.users import User
 from data.posts import Post
-import bcrypt
-import smtplib
-from email.mime.text import MIMEText
-from flask import session
+from data.users import User
 
 UPLOAD_FOLDER = './static/upload'
 app = Flask(__name__, static_folder="static")
@@ -24,18 +24,16 @@ app.secret_key = b'_53oi3uriq9pifpff;apl'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
     days=365
 )
-login_manager = LoginManager()  ######
+login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-#
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
 
 
-# s
 class LoginForm(FlaskForm):
     email = EmailField('Почта', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
@@ -49,7 +47,6 @@ class RegisterForm(FlaskForm):
     submit_ = SubmitField('Зарегистрироваться')
 
 
-#
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
     # login_form
@@ -67,7 +64,7 @@ def auth():
                                    login_message="Неправильный логин или пароль",
                                    register_message='',
                                    login_form=login_form, register_form=register_form)
-    # register_form
+
     if register_form.submit_.data and register_form.validate_on_submit():
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.email == register_form.email_.data).first()
@@ -89,7 +86,6 @@ def auth():
     return render_template('login.html', title='Авторизация', login_form=login_form, register_form=register_form)
 
 
-######
 @app.route('/add_profile', methods=['GET', 'POST'])
 def add_profile():
     if current_user.is_authenticated is False:
@@ -111,8 +107,6 @@ def add_profile():
     return render_template('profile.html')
 
 
-################################№№################
-#####
 @app.route('/contact/<email>', methods=['POST'])
 def contact(email):
     text = MIMEText(f'Пользователю:{current_user.email} очень понравились вы, напишите ему прямо сейчас!!!', 'plain',
@@ -124,8 +118,6 @@ def contact(email):
     return jsonify(result='ok')
 
 
-#
-############
 @app.route('/')
 def render():
     if current_user.is_authenticated is False:
@@ -139,22 +131,11 @@ def render():
     return render_template('page.html', files=files)
 
 
-##########
-
-########
-
-#####№###############
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect("/")
-
-
-k = 0
-
-
-###
 
 
 @app.route('/kluet', methods=["GET", "POST"])
@@ -168,7 +149,7 @@ def kluet():
         files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
     db_sess.close()
     if request.method == "POST":
-        time.sleep(randint(1, 10))
+        time.sleep(randint(10, 30))
         return render_template("kluet.html", files=files)
 
 
@@ -182,9 +163,7 @@ def process():
     for i in range(len(files)):
         files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
     db_sess.close()
-    global k
-    k += 1
-    return render_template("process.html", k=k, files=files)
+    return render_template("process.html", files=files)
 
 
 @app.route('/game', methods=["GET", "POST"])
@@ -198,8 +177,8 @@ def game():
         files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
     db_sess.close()
     return render_template("game.html", files=files)
-##########
-#############
+
+
 @app.route('/poimal', methods=["GET", "POST"])
 def poimal():
     if current_user.is_authenticated is False:
@@ -213,7 +192,7 @@ def poimal():
     return render_template("poimal.html", files=files)
 
 
-@app.route('/itog', methods=["GET", "POST"])
+@app.route('/fish', methods=["GET", "POST"])
 def fish():
     if current_user.is_authenticated is False:
         return redirect('/auth')
@@ -239,18 +218,13 @@ def vozvrat():
     for i in range(len(files)):
         files[i] = (files[i], db_sess.query(Post).filter(Post.image == f'./static/upload\\{files[i]}').first().email)
     db_sess.close()
-    return render_template("start.html", files=files)
+    return render_template("page.html", files=files)
 
-######
-###############################################
-###
+
 def main():
-    db_session.global_init('db/users.sqlite')  # №№####
+    db_session.global_init('db/users.sqlite')
     app.run(port=8080, host='127.0.0.1')
 
 
-################
-####
-#
 if __name__ == '__main__':
     main()

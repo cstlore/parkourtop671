@@ -3,24 +3,16 @@
 {% block content %}
 <div style="width: 100vw; height: 100vh; display: flex;">
     <div style="width: 70%; height: 100%; border-right: gray solid 2px; background-color: #2e3440; position: relative;">
-        <header class="header" style="width: 100%">
-            <table style="width: 50%; margin: auto;">
-                <tbody>
-                <tr>
-                    <td style="text-align: right">
-                        <p><span class="button cursorPointer" onclick="restartGame()">СТАРТ</span></p>
-                    </td>
-                    <td style="text-align: center; width: 150px;">
-                        <p>Счет:
-                            <span id="scoreId">0</span>
-                        </p>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="container">
+            <form action="/poimal" method="post">
+                <input type="submit" value="Поймал">
+            </form>
+        </div>
+        <header class="header" style="width: 98%">
+            <table style="width: 50%; margin: auto;"></table>
         </header>
 
-        <div id="gameField" class="gameField" draggable="false" style="width: 100%" ondragstart="return false">
+        <div id="gameField" class="gameField" draggable="false" style="width: 98%" ondragstart="return false">
             <img id="0" class="img cursorPointer">
             <img id="1" class="img cursorPointer">
             <img id="2" class="img cursorPointer">
@@ -67,7 +59,8 @@
         </div>
         {% for file in files %}
         <div id="post"
-             style="display: flex; align-items: flex-end;z-index:1; position: absolute; width: 90%; height:calc(100% - 40px); margin-left: 5%; margin-top: 5px; justify-content: center; background-color: wheat; border-radius: 20px;" draggable="true">
+             style="display: flex; align-items: flex-end;z-index:1; position: absolute; width: 90%; height:calc(100% - 40px); margin-left: 5%; margin-top: 5px; justify-content: center; background-color: wheat; border-radius: 20px;"
+             draggable="true">
             <div id="green"
                  style="position: absolute; z-index:0; width: 100%; height: 100%; background-color: greenyellow; opacity: 0;"></div>
             <div id="red"

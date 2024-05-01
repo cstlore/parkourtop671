@@ -3,22 +3,17 @@
 {% block content %}
 <div style="width: 100vw; height: 100vh; display: flex;">
     <div style="width: 70%; height: 100%; border-right: gray solid 2px; background-color: #2e3440;">
-        {% if k < 10 %}
-        <div class="container">
-            <form action="/process" method="post">
-                <input type="submit" value="Достать">
-            </form>
-        </div>
-        {% elif k == 10 %}
         <div class="container">
             <form action="/game" method="post">
-                <input type="submit" value="Достать">
+                <input type="submit" value="Играть">
             </form>
         </div>
-        {% endif %}
-        <h2>
+        <h1>
             <img src="static/img/process.jpg"
-                 alt="здесь должна была быть картинка, но не нашлась"></h2>
+                 alt="здесь должна была быть картинка, но не нашлась"
+                 width="1280"
+                 height="720">
+        </h1>
     </div>
     <div style="position: relative; width: 30%; height: 100%; background-color: #2e3440;">
         <div style="display:flex; width: 100%; height: 20px; text-align: right; color: wheat; justify-content: right">
