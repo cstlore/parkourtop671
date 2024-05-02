@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="width: 100vw; height: 100vh; background-color: #2e3440;">
+    <h1 style="width:100%; text-align: center; padding-top: 100px;" class="text-light">Добавление анкеты</h1>
+    <form action="" enctype="multipart/form-data" method="post"
+          style="width: 60%; margin-left: auto; margin-right: auto; margin-top:50px;">
+        <div class="file-upload">
+            <div class="image-upload-wrap">
+                <input class="file-upload-input" name="file1" type='file' onchange="readURL(this);" accept="image/*"/>
+                <div class="drag-text">
+                    <h3>Перетащи файл или выбери изображение</h3>
+                </div>
+            </div>
+            <div class="file-upload-content">
+                <img class="file-upload-image" src="#" alt="your image"/>
+                <div class="image-title-wrap">
+                    <button type="button" onclick="removeUpload()" class="remove-image">Удалить</button>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; width: 100%;">
+            <input class="btn btn-primary" type="submit"/>
+        </div>
+    </form>
+</div>
+{% endblock %}

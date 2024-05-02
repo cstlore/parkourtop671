@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="width: 100vw; height: 100vh;">
+    <h1 style="width:100%; text-align: center; margin-top: 100px; position: absolute">Авторизация</h1>
+    <div style="display: flex; align-items: center; height: 100%; width: 100%;">
+        <div style="width: 50%; border-right: 2px gray solid">
+            <h2 style="width:100%; text-align: center;">Вход</h2>
+            <form action="" method="post" style="width: 60%; margin-left: auto; margin-right: auto;">
+                {{ login_form.hidden_tag() }}
+                <p style="margin-top: 20px;">
+                    {{ login_form.email.label }}<br>
+                    {{ login_form.email(class="login_form-control", type="email", style="width:100%;") }}<br>
+                    {% for error in login_form.email.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                </p>
+                <p>
+                    {{ login_form.password.label }}<br>
+                    {{ login_form.password(class="login_form-control", type="password") }}<br>
+                    {% for error in login_form.password.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                </p>
+                <p>{{ login_form.remember_me() }} {{ login_form.remember_me.label }}</p>
+                <div>{{ login_form.submit(type="submit", class="btn btn-primary", style="margin-left:auto;
+                    margin-right:auto;display:
+                    block;") }}
+                </div>
+                <div>{{ login_message }}</div>
+            </form>
+        </div>
+        <div style="width: 50%; border-right: 2px gray solid">
+            <h2 style="width:100%; text-align: center;">Регистрация</h2>
+            <form action="" method="post" style="width: 60%; margin-left: auto; margin-right: auto;">
+                {{ register_form.hidden_tag() }}
+                <p style="margin-top: 20px;">
+                    {{ register_form.email_.label }}<br>
+                    {{ register_form.email_(class="register_form-control", type="email", style="width:100%;") }}<br>
+                    {% for error in register_form.email_.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                </p>
+                <p>
+                    {{ register_form.password_.label }}<br>
+                    {{ register_form.password_(class="register_form-control", type="password") }}<br>
+                    {% for error in register_form.password_.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                </p>
+                <div>{{ register_form.submit_(type="submit", class="btn btn-primary", style="margin-left:auto;
+                    margin-right:auto;display:
+                    block;") }}
+                </div>
+                <div>{{ register_message }}</div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
