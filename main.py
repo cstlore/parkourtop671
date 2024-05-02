@@ -4,7 +4,6 @@ import smtplib
 import time
 from email.mime.text import MIMEText
 from random import randint
-
 import bcrypt
 from flask import Flask, render_template, redirect, request, jsonify
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
@@ -12,7 +11,6 @@ from flask_wtf import FlaskForm
 from wtforms import PasswordField, BooleanField, SubmitField
 from wtforms.fields.simple import EmailField
 from wtforms.validators import DataRequired
-
 from data import db_session
 from data.posts import Post
 from data.users import User
